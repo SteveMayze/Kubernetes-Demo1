@@ -11,7 +11,7 @@ plugins {
     id 'org.springframework.boot' version '2.0.5.RELEASE'
     id 'io.spring.dependency-management' version '1.0.7.RELEASE'
     id 'com.palantir.docker' version '0.13.0'
-//    id 'com.google.cloud.tools.jib' version '1.2.0'
+    id 'com.google.cloud.tools.jib' version '1.2.0'
 }
 
 sourceCompatibility = 1.8
@@ -37,7 +37,17 @@ bootJar {
 }
 
 docker {
-    name = 'smayze/' + bootJar.baseName
+    name = 'registry.hub.docker.com/smayze/' + bootJar.baseName
     files bootJar.outputs.files.singleFile
     buildArgs(['jar_file': bootJar.baseName + '.jar'])
+}
+
+jib {
+    from {
+        image = 'openjdk:alpine'
+    }
+    to {
+        image = 'registry.hub.docker.com/smayze/' + bootJar.baseName
+        tags = ['latest']
+    }
 }

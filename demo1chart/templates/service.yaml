@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "demo1chart.fullname" . }}
+  namespace: {{ .Release.Namepace }}
+  labels:
+{{ include "demo1chart.labels" . | indent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: 9090
+      protocol: TCP
+      name: http
+  selector:
+    app.kubernetes.io/name: {{ include "demo1chart.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
